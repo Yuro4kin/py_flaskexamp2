@@ -1,0 +1,42 @@
+<!-- шаблон register.html расширяет базовый шаблон base.html -->
+<!-- шаблон register.html для отображения регистрации по url адресу "/register" -->
+
+{% extends 'base.html' %}
+ 
+{% block content %}
+{{ super() }}
+{% for cat, msg in get_flashed_messages(True) %}
+<div class="flash {{cat}}">{{msg}}</div>
+{% endfor %}
+<form action="/register" method="post" class="form-contact">
+
+<!-- # вызываем шаблон hidden_tag, чтоб защититься от crf атак -->
+<!-- # перебираем все поля-crf_token, submit через цикл -->
+<!-- # отображаем имя поля-label и если-if есть ошибки отображаем их красным полем-field  -->
+<!-- # перебираем ошибки-errors если будут, иначе-else отображается в нормальном состоянии, т.е. виде -->
+<!-- шаблон формы регистрации готов и мы переходим к обработчику -->
+{{ form.hidden_tag() }}
+ 
+{% for field in form if field.name not in ['csrf_token', 'submit'] -%}
+         <p>{{ field.label() }} 
+         {% if field.errors %}
+                   {{ field(class="invalid") }}
+         <span class="invalid-feedback">
+                   {% for e in field.errors %}
+                   {{ e }}
+                   {% endfor %}
+         </span>
+         {% else %}
+                   {{ field() }}
+         {% endif %}
+{% endfor %}
+ 
+<p>{{ form.submit() }}
+</form>
+{% endblock %}
+
+<!-- <p><label>Имя: </label> <input type="text" name="name" value="" requied />
+<p><label>Email: </label> <input type="text" name="email" value="" requied />
+<p><label>Пароль: </label> <input type="password" name="psw" value="" requied />
+<p><label>Повтор пароля: </label> <input type="password" name="psw2" value="" requied />
+<p><input type="submit" value="Регистрация" /> -->
