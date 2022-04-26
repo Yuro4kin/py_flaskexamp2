@@ -1,0 +1,79 @@
+<!-- шаблон login.html расширяет базовый шаблон base.html -->
+<!-- шаблон login.html для отображения статьи по url адресу "/login" -->
+
+{% extends 'base.html' %}
+ 
+{% block content %}
+{{ super() }}
+{% for cat, msg in get_flashed_messages(True) %}
+<div class="flash {{cat}}">{{msg}}</div>
+{% endfor %} 
+<!-- статья доступ закрыт - авториизация - автоматический переход на статью -->
+<!-- <form action="/login" method="post" class="form-contact"> -->
+<form action="" method="post" class="form-contact">
+<!-- hidden_tag() - метод создает скрытое поле содержащее token, защита от CRF атак -->
+{{ form.hidden_tag() }}
+
+<!-- label() - метод формирует описание поля ввода тег <label>Email: -->
+<!-- <p>_ _ form.email.label() _ _ --> 
+<!-- Проверка ошибок при вводе данных в это поле, форма была отправлена, проверена, там возникли ошибки, то она возвращается опять на сервер и эта коллекция будет содержать соответствующие сообщения об ошибках --> 
+<!-- _% if form.email.errors %_ -->
+<!-- если ошибки возникли, то мы это поле ввода email будем отображать с такими стилями оформления  -->
+<!-- _ _ form.email(class="invalid") _ _ -->
+<!-- Отображение поля -->
+<!-- Далее перебираем ошибки из коллекции errors -->
+<!-- span - отображает все ошибки которые возникли при вводе в поле email -->
+<!-- <span class = "invalid-feedback">
+	_% for e in form.email.errors %_
+	_ _ e _ _
+	_% endfor %_
+</span>	 -->
+<!-- иначе выводим поле email как первоначально ввели -->
+<!-- _% else %_
+	_ _ form.email() _ _
+_% endif %_ -->
+
+<!-- если ошибки возникли, то поле ввода psw будем отображать с такими стилями оформления  -->
+<!-- <p>_ _ form.psw.label() _ _ 
+_% if form.psw.errors %_
+	_ _ form.psw(class="invalid") _ _
+<span class = "invalid-feedback">
+	_% for e in form.psw.errors %_
+	_ _ e _ _
+	_% endfor %_
+</span>	
+_% else %_
+	_ _ form.psw() _ _
+_% endif %_ -->
+
+<!-- создадим однотипные поля формы ошибок email - psw - через цикл -->
+<!-- цикл будет брать из формы-form очередное поле-field имя-name не должно быть -->
+<!-- следующим csrf_token, remember, submit  -->
+<!-- в данном случае мы отбрасываем формирование чекбокса и кнопки войти -->
+<!-- field - будет ссылаться на текущую переменную, которая будет браться из нашей формы -->
+{% for field in form if field.name not in ['csrf_token', 'remember', 'submit'] -%}
+<!-- сформируем поле ввода для email и пароля psw, т.к. они однотипные формировать будем по однотипному шаблону -->
+	<p>{{ field.label() }} 
+	{% if field.errors %}
+		{{ field(class="invalid") }}
+	<span class = "invalid-feedback">
+		{% for e in field.errors %}
+		{{ e }}
+		{% endfor %}
+	</span>	
+	{% else %}
+		{{ field() }}
+	{% endif %}
+{% endfor %}
+
+<p>{{ form.remember.label() }} {{ form.remember() }}
+<p>{{ form.submit() }}
+<!-- <p><label>Email: </label> <input type="text" name="email" value="" requied /> -->
+<!-- <p><label>Пароль: </label> <input type="password" name="psw" value="" requied /> -->
+<!-- <p><input type="checkbox" name="remainme" /> Запомнить меня -->
+<!-- <p><input type="submit" value="Войти" /> -->
+
+<hr align=left width="300px">
+<p><a href="{{url_for('register')}}">Регистрация</a>
+</form>
+{% endblock %}

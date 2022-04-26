@@ -1,0 +1,17 @@
+<!-- # Расширяем базовый шаблон - base_admin.html -->
+<!-- # в блокe content перебираем список list, который будет содержать список пользователей, выводим имя пользователя p.name и его p.email -->
+
+{% extends 'admin/base_admin.html' %}
+ 
+{% block content %}
+{{ super() }}
+<h1>{{title}}</h1>
+<ul class="list-posts">
+{% for p in list %}
+<li>
+<p class="title">{{p.name}}</p>
+<p class="annonce">{{ p.email }}</p>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}
