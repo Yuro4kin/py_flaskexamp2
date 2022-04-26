@@ -1,0 +1,19 @@
+<!-- # расширяем базовый шаблон - base_admin.html -->
+<!-- # в блоке content отображаем заголовок и список-list-post -->
+<!-- # for - в списке перебираем все статьи из списка-list прочитанного из БД -->
+<!-- # url_for() - выводим заголовок в виде ссылки showPost -->
+<!-- annonce - мы уже это делали, когда отображали список страниц -->
+{% extends 'admin/base_admin.html' %}
+ 
+{% block content %}
+{{ super() }}
+<h1>{{title}}</h1>
+<ul class="list-posts">
+{% for p in list %}
+<li>
+<p class="title"><a href="{{ url_for('showPost', alias=p.url)}}">{{p.title}}</a></p>
+<p class="annonce">{{ p.text[:50] | striptags  }}</p>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}
