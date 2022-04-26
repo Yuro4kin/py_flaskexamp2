@@ -1,0 +1,22 @@
+<!-- # Файл index.html расширяет базовый шаблон layout.html -->
+<!-- # Будем перебирать список list, т.к. мы знаем его структуру -->
+<!-- # перебираем из таблицы u поля id, email, из таблицы pr поля name, old, city  -->
+<!-- # отображаем в виде вложенного списка -->
+{% extends 'layout.html' %}
+
+{% block content %}
+<ul>
+
+{% for u in list %}
+    <li>
+	    <p>id: {{u.id}}, email: {{u.email}}</p>
+        <ul>
+            <li>Имя: {{u.pr.name}}</li>
+            <li>Возраст: {{u.pr.old}}</li>
+            <li>Город: {{u.pr.city}}</li>
+        </ul>
+    </li> 
+{% endfor %}
+
+</ul>
+{% endblock %}
